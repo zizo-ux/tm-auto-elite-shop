@@ -18,9 +18,9 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        automotive: "bg-gradient-to-r from-automotive-blue to-automotive-blue-dark text-white hover:shadow-automotive transition-all duration-300 hover:scale-105",
-        "automotive-outline": "border-2 border-automotive-blue bg-transparent text-automotive-blue hover:bg-automotive-blue hover:text-white transition-all duration-300",
-        hero: "bg-white/10 backdrop-blur-sm text-white border border-white/20 hover:bg-white/20 hover:shadow-lg transition-all duration-300"
+        automotive: "bg-gradient-to-r from-automotive-orange to-automotive-red text-white hover:shadow-automotive transition-all duration-300 hover:scale-105 shadow-lg",
+        "automotive-outline": "border-2 border-automotive-orange bg-transparent text-automotive-orange hover:bg-automotive-orange hover:text-white transition-all duration-300 hover:shadow-glow",
+        hero: "bg-gradient-to-r from-automotive-orange/20 via-automotive-red/20 to-automotive-yellow/20 backdrop-blur-sm text-white border border-automotive-yellow/30 hover:bg-automotive-orange/30 hover:shadow-glow transition-all duration-300"
       },
       size: {
         default: "h-10 px-4 py-2",

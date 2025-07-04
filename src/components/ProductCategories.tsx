@@ -18,7 +18,8 @@ const ProductCategories = () => {
       icon: Settings,
       description: "Pistons, valves, gaskets, timing belts, and motors",
       itemCount: "2,500+ items",
-      popular: ["Engine Oil", "Air Filters", "Spark Plugs", "Timing Belts"]
+      popular: ["Engine Oil", "Air Filters", "Spark Plugs", "Timing Belts"],
+      color: "category-engine"
     },
     {
       id: "suspension",
@@ -26,7 +27,8 @@ const ProductCategories = () => {
       icon: Car,
       description: "Shock absorbers, struts, control arms, and suspension bushes",
       itemCount: "1,800+ items",
-      popular: ["Shock Absorbers", "Struts", "Control Arms", "Ball Joints"]
+      popular: ["Shock Absorbers", "Struts", "Control Arms", "Ball Joints"],
+      color: "category-suspension"
     },
     {
       id: "braking",
@@ -34,7 +36,8 @@ const ProductCategories = () => {
       icon: Disc,
       description: "Brake pads, discs, drums, and calipers",
       itemCount: "1,200+ items", 
-      popular: ["Brake Pads", "Brake Discs", "Brake Drums", "Calipers"]
+      popular: ["Brake Pads", "Brake Discs", "Brake Drums", "Calipers"],
+      color: "category-braking"
     },
     {
       id: "electrical",
@@ -42,7 +45,8 @@ const ProductCategories = () => {
       icon: Zap,
       description: "Alternators, starters, batteries, and sensors",
       itemCount: "3,000+ items",
-      popular: ["Alternators", "Starters", "Batteries", "Sensors"]
+      popular: ["Alternators", "Starters", "Batteries", "Sensors"],
+      color: "category-electrical"
     },
     {
       id: "body",
@@ -50,7 +54,8 @@ const ProductCategories = () => {
       icon: Wrench,
       description: "Bumpers, fenders, mirrors, and lights",
       itemCount: "2,200+ items",
-      popular: ["Bumpers", "Fenders", "Mirrors", "Headlights"]
+      popular: ["Bumpers", "Fenders", "Mirrors", "Headlights"],
+      color: "category-body"
     },
     {
       id: "transmission",
@@ -58,18 +63,19 @@ const ProductCategories = () => {
       icon: Cog,
       description: "Clutches, gearboxes and drive shafts",
       itemCount: "900+ items",
-      popular: ["Clutches", "Gearboxes", "Drive Shafts", "CV Joints"]
+      popular: ["Clutches", "Gearboxes", "Drive Shafts", "CV Joints"],
+      color: "category-transmission"
     }
   ];
 
   return (
-    <section id="categories" className="py-20 bg-gray-50">
+    <section id="categories" className="py-20 bg-automotive-cream">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-automotive-dark mb-4">
+          <h2 className="text-4xl font-bold text-automotive-charcoal mb-4">
             Shop by Category
           </h2>
-          <p className="text-xl text-automotive-gray max-w-2xl mx-auto">
+          <p className="text-xl text-automotive-warm-gray max-w-2xl mx-auto">
             Find the exact parts you need from our extensive range of automotive components
           </p>
         </div>
@@ -78,35 +84,52 @@ const ProductCategories = () => {
           {categories.map((category, index) => (
             <Card 
               key={category.id} 
-              className="group hover:shadow-automotive transition-all duration-300 hover:scale-105 animate-fade-in"
-              style={{ animationDelay: `${index * 100}ms` }}
+              className="group hover:shadow-automotive transition-all duration-300 hover:scale-105 animate-fade-in border-2 hover:border-automotive-orange/30"
+              style={{ 
+                animationDelay: `${index * 100}ms`,
+                background: `linear-gradient(145deg, white, hsl(var(--${category.color}) / 0.05))`
+              }}
             >
               <CardContent className="p-6">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 bg-automotive-blue-light rounded-lg flex items-center justify-center group-hover:bg-automotive-blue transition-colors">
-                    <category.icon className="w-6 h-6 text-automotive-blue group-hover:text-white" />
+                  <div 
+                    className="w-12 h-12 rounded-lg flex items-center justify-center group-hover:scale-110 transition-all duration-300"
+                    style={{ 
+                      backgroundColor: `hsl(var(--${category.color}) / 0.15)`,
+                      border: `2px solid hsl(var(--${category.color}) / 0.3)`
+                    }}
+                  >
+                    <category.icon 
+                      className="w-6 h-6 transition-colors duration-300" 
+                      style={{ color: `hsl(var(--${category.color}))` }}
+                    />
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg text-automotive-dark">
+                    <h3 className="font-bold text-lg text-automotive-charcoal">
                       {category.name}
                     </h3>
-                    <p className="text-sm text-automotive-gray">
+                    <p className="text-sm text-automotive-warm-gray">
                       {category.itemCount}
                     </p>
                   </div>
                 </div>
 
-                <p className="text-automotive-gray mb-4">
+                <p className="text-automotive-warm-gray mb-4">
                   {category.description}
                 </p>
 
                 <div className="mb-6">
-                  <p className="text-sm font-medium text-automotive-dark mb-2">Popular Items:</p>
+                  <p className="text-sm font-medium text-automotive-charcoal mb-2">Popular Items:</p>
                   <div className="flex flex-wrap gap-2">
                     {category.popular.map((item, i) => (
                       <span 
                         key={i}
-                        className="text-xs bg-automotive-blue-light text-automotive-blue px-2 py-1 rounded-full"
+                        className="text-xs px-2 py-1 rounded-full transition-colors duration-300"
+                        style={{ 
+                          backgroundColor: `hsl(var(--${category.color}) / 0.1)`,
+                          color: `hsl(var(--${category.color}))`,
+                          border: `1px solid hsl(var(--${category.color}) / 0.3)`
+                        }}
                       >
                         {item}
                       </span>
@@ -116,7 +139,19 @@ const ProductCategories = () => {
 
                 <Button 
                   variant="automotive-outline" 
-                  className="w-full group-hover:bg-automotive-blue group-hover:text-white"
+                  className="w-full group-hover:shadow-lg transition-all duration-300"
+                  style={{
+                    borderColor: `hsl(var(--${category.color}))`,
+                    color: `hsl(var(--${category.color}))`,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = `hsl(var(--${category.color}))`;
+                    e.currentTarget.style.color = 'white';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = `hsl(var(--${category.color}))`;
+                  }}
                   onClick={() => {
                     // Simulate category page navigation
                     window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -36,20 +36,35 @@ All colors MUST be HSL.
     --input: 214 32% 91%;
     --ring: 210 100% 50%;
 
-    /* Automotive theme colors */
-    --automotive-blue: 210 100% 50%;
-    --automotive-blue-dark: 210 100% 40%;
-    --automotive-blue-light: 210 100% 90%;
-    --automotive-gray: 215 16% 47%;
-    --automotive-dark: 220 26% 14%;
+    /* Vibrant automotive theme colors */
+    --automotive-orange: 20 95% 55%;
+    --automotive-red: 0 85% 60%;
+    --automotive-blue: 220 90% 50%;
+    --automotive-yellow: 45 95% 60%;
+    --automotive-green: 140 70% 50%;
+    --automotive-purple: 260 70% 55%;
+    --automotive-charcoal: 220 15% 25%;
+    --automotive-warm-gray: 30 8% 60%;
+    --automotive-cream: 35 25% 95%;
     
-    /* Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(var(--automotive-blue)), hsl(var(--automotive-blue-dark)));
-    --gradient-card: linear-gradient(145deg, hsl(var(--background)), hsl(var(--secondary)));
+    /* Category specific colors */
+    --category-engine: 15 90% 55%;
+    --category-suspension: 220 85% 60%;
+    --category-braking: 0 80% 55%;
+    --category-electrical: 50 90% 60%;
+    --category-body: 200 40% 60%;
+    --category-transmission: 270 65% 55%;
     
-    /* Shadows */
-    --shadow-automotive: 0 10px 30px -10px hsl(var(--automotive-blue) / 0.3);
-    --shadow-card: 0 4px 12px -2px hsl(var(--automotive-gray) / 0.15);
+    /* Dynamic gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--automotive-orange)), hsl(var(--automotive-red)));
+    --gradient-sunset: linear-gradient(180deg, hsl(var(--automotive-orange)), hsl(var(--automotive-red)));
+    --gradient-warm: linear-gradient(145deg, hsl(var(--automotive-cream)), hsl(35 15% 92%));
+    --gradient-glow: radial-gradient(circle, hsl(var(--automotive-yellow) / 0.3), transparent);
+    
+    /* Enhanced shadows */
+    --shadow-automotive: 0 15px 35px -5px hsl(var(--automotive-orange) / 0.4);
+    --shadow-warm: 0 8px 25px -5px hsl(var(--automotive-charcoal) / 0.15);
+    --shadow-glow: 0 0 40px hsl(var(--automotive-yellow) / 0.3);
 
     --radius: 0.5rem;
 

@@ -53,11 +53,23 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				automotive: {
+					orange: 'hsl(var(--automotive-orange))',
+					red: 'hsl(var(--automotive-red))',
 					blue: 'hsl(var(--automotive-blue))',
-					'blue-dark': 'hsl(var(--automotive-blue-dark))',
-					'blue-light': 'hsl(var(--automotive-blue-light))',
-					gray: 'hsl(var(--automotive-gray))',
-					dark: 'hsl(var(--automotive-dark))'
+					yellow: 'hsl(var(--automotive-yellow))',
+					green: 'hsl(var(--automotive-green))',
+					purple: 'hsl(var(--automotive-purple))',
+					charcoal: 'hsl(var(--automotive-charcoal))',
+					'warm-gray': 'hsl(var(--automotive-warm-gray))',
+					cream: 'hsl(var(--automotive-cream))'
+				},
+				category: {
+					engine: 'hsl(var(--category-engine))',
+					suspension: 'hsl(var(--category-suspension))',
+					braking: 'hsl(var(--category-braking))',
+					electrical: 'hsl(var(--category-electrical))',
+					body: 'hsl(var(--category-body))',
+					transmission: 'hsl(var(--category-transmission))'
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
