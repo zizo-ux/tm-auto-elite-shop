@@ -18,11 +18,15 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        automotive: "bg-gradient-to-r from-automotive-blue to-automotive-blue-dark text-white hover:shadow-automotive transition-all duration-300 hover:scale-105",
+        "automotive-outline": "border-2 border-automotive-blue bg-transparent text-automotive-blue hover:bg-automotive-blue hover:text-white transition-all duration-300",
+        hero: "bg-white/10 backdrop-blur-sm text-white border border-white/20 hover:bg-white/20 hover:shadow-lg transition-all duration-300"
       },
       size: {
         default: "h-10 px-4 py-2",
         sm: "h-9 rounded-md px-3",
         lg: "h-11 rounded-md px-8",
+        xl: "h-14 rounded-lg px-10 text-lg",
         icon: "h-10 w-10",
       },
     },
