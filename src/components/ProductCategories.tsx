@@ -117,6 +117,11 @@ const ProductCategories = () => {
                 <Button 
                   variant="automotive-outline" 
                   className="w-full group-hover:bg-automotive-blue group-hover:text-white"
+                  onClick={() => {
+                    // Simulate category page navigation
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    // Could be replaced with actual navigation later
+                  }}
                 >
                   View All Parts
                   <ArrowRight className="w-4 h-4 ml-2" />
@@ -127,7 +132,11 @@ const ProductCategories = () => {
         </div>
 
         <div className="text-center mt-12">
-          <Button variant="automotive" size="lg">
+          <Button 
+            variant="automotive" 
+            size="lg"
+            onClick={() => document.getElementById('vin-search')?.scrollIntoView({ behavior: 'smooth' })}
+          >
             View All Categories
           </Button>
         </div>

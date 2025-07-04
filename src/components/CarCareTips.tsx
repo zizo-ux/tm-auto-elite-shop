@@ -163,7 +163,10 @@ const CarCareTips = () => {
           </div>
 
           <div className="text-center mt-8">
-            <Button variant="automotive">
+            <Button 
+              variant="automotive"
+              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+            >
               View More Tips
             </Button>
           </div>

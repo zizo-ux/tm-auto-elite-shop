@@ -35,11 +35,21 @@ const Hero = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="hero" size="xl" className="group">
+              <Button 
+                variant="hero" 
+                size="xl" 
+                className="group"
+                onClick={() => document.getElementById('categories')?.scrollIntoView({ behavior: 'smooth' })}
+              >
                 Shop Now
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <Button variant="automotive-outline" size="xl" className="bg-white/10 border-white/30 hover:bg-white/20">
+              <Button 
+                variant="automotive-outline" 
+                size="xl" 
+                className="bg-white/10 border-white/30 hover:bg-white/20"
+                onClick={() => document.getElementById('vin-search')?.scrollIntoView({ behavior: 'smooth' })}
+              >
                 VIN Search
               </Button>
             </div>
