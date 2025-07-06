@@ -1,11 +1,15 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Menu, X, ShoppingCart, Phone, MapPin } from "lucide-react";
+import { Search, Menu, X, ShoppingCart, Phone, MapPin, Shield } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Link } from "react-router-dom";
+import { isAuthenticated } from "@/lib/auth";
 
 const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const authenticated = isAuthenticated();
 
   const navItems = [
     { name: "Home", href: "#home" },
@@ -41,7 +45,7 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-3">
             <div className="w-12 h-12 bg-gradient-to-br from-automotive-blue to-automotive-blue-dark rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-xl">TM</span>
             </div>
@@ -51,7 +55,7 @@ const Header = () => {
               </h1>
               <p className="text-sm text-automotive-gray">Premium Auto Parts</p>
             </div>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-6">
@@ -64,6 +68,15 @@ const Header = () => {
                 {item.name}
               </a>
             ))}
+            {authenticated && (
+              <Link
+                to="/admin"
+                className="flex items-center gap-2 text-automotive-orange hover:text-automotive-red transition-colors font-medium"
+              >
+                <Shield className="w-4 h-4" />
+                Admin
+              </Link>
+            )}
           </nav>
 
           {/* Search & Cart */}
@@ -103,6 +116,15 @@ const Header = () => {
                       {item.name}
                     </a>
                   ))}
+                  {authenticated && (
+                    <Link
+                      to="/admin"
+                      className="flex items-center gap-2 text-lg font-medium text-automotive-orange hover:text-automotive-red transition-colors"
+                    >
+                      <Shield className="w-4 h-4" />
+                      Admin Panel
+                    </Link>
+                  )}
                   <div className="mt-4 pt-4 border-t">
                     <Input
                       placeholder="Search parts..."
