@@ -1,9 +1,11 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { 
   Phone, 
   Mail, 
@@ -26,6 +28,7 @@ const Contact = () => {
     inquiryType: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [trackingNumber, setTrackingNumber] = useState("");
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,24 +57,46 @@ const Contact = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleTrackOrder = () => {
+    if (trackingNumber.trim()) {
+      toast({
+        title: "Order Status",
+        description: `Tracking order: ${trackingNumber}. Feature coming soon!`,
+      });
+      setTrackingNumber("");
+    } else {
+      toast({
+        title: "Please enter a tracking number",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleLiveChat = () => {
+    toast({
+      title: "Live Chat",
+      description: "Connecting you to our support team...",
+    });
+  };
+
   const contactInfo = [
     {
       icon: Phone,
       title: "Phone Support",
-      value: "+1-800-TM-AUTO",
-      description: "Mon-Fri 8AM-8PM EST"
+      value: "+27 72 542 2814",
+      description: "Mon-Fri 8AM-8PM SAST"
     },
     {
       icon: Mail,
       title: "Email Support",
-      value: "support@tmautoexpress.com",
+      value: "tmautoexpress@gmail.com",
       description: "24/7 Email Support"
     },
     {
       icon: MapPin,
-      title: "Nationwide Delivery",
-      value: "We deliver everywhere",
-      description: "Fast & reliable shipping"
+      title: "Our Location",
+      value: "43 Ametis crescent",
+      description: "Mpumalanga Middleburg"
     },
     {
       icon: Clock,
@@ -137,7 +162,7 @@ const Contact = () => {
                         Phone Number
                       </label>
                       <Input
-                        placeholder="+1 (555) 123-4567"
+                        placeholder="+27 72 542 2814"
                         value={formData.phone}
                         onChange={(e) => handleInputChange("phone", e.target.value)}
                       />
@@ -244,14 +269,48 @@ const Contact = () => {
               <CardContent className="p-6">
                 <h3 className="font-bold text-lg mb-4">Need Immediate Help?</h3>
                 <div className="space-y-3">
-                  <Button variant="hero" size="sm" className="w-full justify-start">
+                  <Button 
+                    variant="hero" 
+                    size="sm" 
+                    className="w-full justify-start"
+                    onClick={handleLiveChat}
+                  >
                     <HeadphonesIcon className="w-4 h-4 mr-2" />
                     Live Chat Support
                   </Button>
-                  <Button variant="hero" size="sm" className="w-full justify-start">
-                    <Truck className="w-4 h-4 mr-2" />
-                    Track Your Order
-                  </Button>
+                  
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="hero" size="sm" className="w-full justify-start">
+                        <Truck className="w-4 h-4 mr-2" />
+                        Track Your Order
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Track Your Order</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="text-sm font-medium mb-2 block">
+                            Enter Tracking Number
+                          </label>
+                          <Input
+                            placeholder="e.g., TM123456789"
+                            value={trackingNumber}
+                            onChange={(e) => setTrackingNumber(e.target.value)}
+                          />
+                        </div>
+                        <Button 
+                          onClick={handleTrackOrder}
+                          variant="automotive"
+                          className="w-full"
+                        >
+                          Track Order
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </CardContent>
             </Card>

@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
@@ -67,6 +68,20 @@ const ProductCategories = () => {
       color: "category-transmission"
     }
   ];
+
+  const handleCategoryClick = (categoryId: string) => {
+    // Simulate category filtering - for now, just scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // In a real app, this would navigate to a category page or filter products
+    console.log(`Browsing ${categoryId} category`);
+  };
+
+  const handleViewAllCategories = () => {
+    const vinSearchSection = document.querySelector('#vin-search');
+    if (vinSearchSection) {
+      vinSearchSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <section id="categories" className="py-20 bg-automotive-cream">
@@ -152,11 +167,7 @@ const ProductCategories = () => {
                     e.currentTarget.style.backgroundColor = 'transparent';
                     e.currentTarget.style.color = `hsl(var(--${category.color}))`;
                   }}
-                  onClick={() => {
-                    // Simulate category page navigation
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    // Could be replaced with actual navigation later
-                  }}
+                  onClick={() => handleCategoryClick(category.id)}
                 >
                   View All Parts
                   <ArrowRight className="w-4 h-4 ml-2" />
@@ -170,7 +181,7 @@ const ProductCategories = () => {
           <Button 
             variant="automotive" 
             size="lg"
-            onClick={() => document.getElementById('vin-search')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={handleViewAllCategories}
           >
             View All Categories
           </Button>

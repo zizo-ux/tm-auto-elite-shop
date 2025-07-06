@@ -9,6 +9,7 @@ import { isAuthenticated } from "@/lib/auth";
 
 const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const authenticated = isAuthenticated();
 
   const navItems = [
@@ -20,6 +21,21 @@ const Header = () => {
     { name: "Contact", href: "#contact" },
   ];
 
+  const handleNavClick = (href: string) => {
+    const element = document.querySelector(href);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      // For now, scroll to categories section
+      handleNavClick('#categories');
+      setSearchQuery("");
+    }
+  };
+
   return (
     <header className="bg-white shadow-lg sticky top-0 z-50">
       {/* Top Bar */}
@@ -28,11 +44,11 @@ const Header = () => {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <Phone className="w-4 h-4" />
-              <span>+1-800-TM-AUTO</span>
+              <span>+27 72 542 2814</span>
             </div>
             <div className="flex items-center gap-2">
               <MapPin className="w-4 h-4" />
-              <span>We Deliver Nationwide</span>
+              <span>43 Ametis crescent Mpumalanga Middleburg</span>
             </div>
           </div>
           <div className="hidden md:block">
@@ -60,13 +76,13 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-6">
             {navItems.map((item) => (
-              <a
+              <button
                 key={item.name}
-                href={item.href}
+                onClick={() => handleNavClick(item.href)}
                 className="text-automotive-dark hover:text-automotive-blue transition-colors font-medium"
               >
                 {item.name}
-              </a>
+              </button>
             ))}
             {authenticated && (
               <Link
@@ -85,8 +101,11 @@ const Header = () => {
               <Input
                 placeholder="Search parts..."
                 className="w-48"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
               />
-              <Button variant="automotive" size="icon">
+              <Button variant="automotive" size="icon" onClick={handleSearch}>
                 <Search className="w-4 h-4" />
               </Button>
             </div>
@@ -108,13 +127,13 @@ const Header = () => {
               <SheetContent>
                 <div className="flex flex-col gap-4 mt-8">
                   {navItems.map((item) => (
-                    <a
+                    <button
                       key={item.name}
-                      href={item.href}
-                      className="text-lg font-medium text-automotive-dark hover:text-automotive-blue transition-colors"
+                      onClick={() => handleNavClick(item.href)}
+                      className="text-lg font-medium text-automotive-dark hover:text-automotive-blue transition-colors text-left"
                     >
                       {item.name}
-                    </a>
+                    </button>
                   ))}
                   {authenticated && (
                     <Link
@@ -129,8 +148,11 @@ const Header = () => {
                     <Input
                       placeholder="Search parts..."
                       className="mb-3"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                     />
-                    <Button variant="automotive" className="w-full">
+                    <Button variant="automotive" className="w-full" onClick={handleSearch}>
                       <Search className="w-4 h-4 mr-2" />
                       Search
                     </Button>

@@ -4,6 +4,13 @@ import { Search, Wrench, Shield, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Hero = () => {
+  const handleBrowseParts = () => {
+    const categoriesSection = document.querySelector('#categories');
+    if (categoriesSection) {
+      categoriesSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section id="home" className="relative min-h-screen flex items-center bg-gradient-to-br from-automotive-cream via-automotive-warm-gray/10 to-white overflow-hidden">
       {/* Background Elements */}
@@ -52,6 +59,7 @@ const Hero = () => {
                 variant="automotive-outline" 
                 size="xl"
                 className="group"
+                onClick={handleBrowseParts}
               >
                 <Search className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
                 Browse Parts

@@ -1,3 +1,4 @@
+
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ProductCategories from "@/components/ProductCategories";
@@ -6,6 +7,13 @@ import CarCareTips from "@/components/CarCareTips";
 import Contact from "@/components/Contact";
 
 const Index = () => {
+  const handleFooterNavClick = (href: string) => {
+    const element = document.querySelector(href);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen">
       <Header />
@@ -37,29 +45,58 @@ const Index = () => {
             <div>
               <h4 className="font-semibold mb-4">Quick Links</h4>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#categories" className="hover:text-white transition-colors">Product Categories</a></li>
-                <li><a href="#vin-search" className="hover:text-white transition-colors">VIN Search</a></li>
-                <li><a href="#tips" className="hover:text-white transition-colors">Car Care Tips</a></li>
-                <li><a href="#contact" className="hover:text-white transition-colors">Contact Us</a></li>
+                <li>
+                  <button 
+                    onClick={() => handleFooterNavClick('#categories')}
+                    className="hover:text-white transition-colors text-left"
+                  >
+                    Product Categories
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => handleFooterNavClick('#vin-search')}
+                    className="hover:text-white transition-colors text-left"
+                  >
+                    VIN Search
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => handleFooterNavClick('#tips')}
+                    className="hover:text-white transition-colors text-left"
+                  >
+                    Car Care Tips
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => handleFooterNavClick('#contact')}
+                    className="hover:text-white transition-colors text-left"
+                  >
+                    Contact Us
+                  </button>
+                </li>
               </ul>
             </div>
             
             <div>
               <h4 className="font-semibold mb-4">Categories</h4>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Engine Parts</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Brake Systems</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Suspension</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Electrical</a></li>
+                <li><button className="hover:text-white transition-colors text-left">Engine Parts</button></li>
+                <li><button className="hover:text-white transition-colors text-left">Brake Systems</button></li>
+                <li><button className="hover:text-white transition-colors text-left">Suspension</button></li>
+                <li><button className="hover:text-white transition-colors text-left">Electrical</button></li>
               </ul>
             </div>
             
             <div>
               <h4 className="font-semibold mb-4">Contact Info</h4>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li>Phone: +1-800-TM-AUTO</li>
-                <li>Email: support@tmautoexpress.com</li>
-                <li>Hours: Mon-Fri 8AM-8PM EST</li>
+                <li>Phone: +27 72 542 2814</li>
+                <li>Email: tmautoexpress@gmail.com</li>
+                <li>Address: 43 Ametis crescent</li>
+                <li>Mpumalanga Middleburg</li>
                 <li className="text-automotive-blue font-medium">We Deliver Nationwide</li>
               </ul>
             </div>
