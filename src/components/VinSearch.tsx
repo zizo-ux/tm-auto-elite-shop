@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Car, Calendar, Wrench, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useProducts } from "@/contexts/ProductContext";
+import VinResults from "./VinResults";
 
 const VinSearch = () => {
   const [vinNumber, setVinNumber] = useState("");
@@ -12,7 +14,10 @@ const VinSearch = () => {
   const [model, setModel] = useState("");
   const [year, setYear] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [vehicleInfo, setVehicleInfo] = useState(null);
   const { toast } = useToast();
+  const { products } = useProducts();
 
   const carMakes = [
     "Toyota", "Honda", "Ford", "Chevrolet", "Nissan", "BMW", "Mercedes-Benz", 
@@ -20,6 +25,25 @@ const VinSearch = () => {
   ];
 
   const years = Array.from({ length: 30 }, (_, i) => (new Date().getFullYear() - i).toString());
+
+  const mockVinDecode = (vin: string) => {
+    // Simple mock VIN decoder - in real app, this would call an API
+    const mockData = {
+      make: "Toyota",
+      model: "Camry",
+      year: "2020",
+      engine: "2.5L 4-Cylinder"
+    };
+    return mockData;
+  };
+
+  const findCompatibleParts = (vehicleInfo: any) => {
+    // Simple compatibility matching - in real app, this would use a proper database
+    return products.filter(product => 
+      product.compatible_vehicles.toLowerCase().includes(vehicleInfo.make.toLowerCase()) ||
+      product.compatible_vehicles.toLowerCase().includes(vehicleInfo.model.toLowerCase())
+    );
+  };
 
   const handleVinSearch = async () => {
     if (!vinNumber || vinNumber.length !== 17) {
@@ -32,12 +56,19 @@ const VinSearch = () => {
     }
 
     setIsSearching(true);
+    
     // Simulate API call
     setTimeout(() => {
+      const decodedVehicle = mockVinDecode(vinNumber);
+      const compatibleParts = findCompatibleParts(decodedVehicle);
+      
+      setVehicleInfo(decodedVehicle);
       setIsSearching(false);
+      setShowResults(true);
+      
       toast({
         title: "VIN Search Complete",
-        description: "Found compatible parts for your vehicle",
+        description: `Found ${compatibleParts.length} compatible parts for your ${decodedVehicle.year} ${decodedVehicle.make} ${decodedVehicle.model}`,
       });
     }, 2000);
   };
@@ -53,14 +84,47 @@ const VinSearch = () => {
     }
 
     setIsSearching(true);
+    
     setTimeout(() => {
+      const vehicleData = { make, model, year, engine: "Standard Engine" };
+      const compatibleParts = findCompatibleParts(vehicleData);
+      
+      setVehicleInfo(vehicleData);
       setIsSearching(false);
+      setShowResults(true);
+      
       toast({
         title: "Search Complete",
-        description: `Found parts for ${year} ${make} ${model}`,
+        description: `Found ${compatibleParts.length} compatible parts for ${year} ${make} ${model}`,
       });
     }, 1500);
   };
+
+  const handleCloseResults = () => {
+    setShowResults(false);
+    setVehicleInfo(null);
+    setVinNumber("");
+    setMake("");
+    setModel("");
+    setYear("");
+  };
+
+  if (showResults && vehicleInfo) {
+    const compatibleParts = findCompatibleParts(vehicleInfo);
+    
+    return (
+      <section id="vin-search" className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <VinResults
+            vinNumber={vinNumber}
+            vehicleInfo={vehicleInfo}
+            compatibleParts={compatibleParts}
+            onClose={handleCloseResults}
+          />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="vin-search" className="py-20 bg-white">

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,11 +5,14 @@ import { Search, Menu, X, ShoppingCart, Phone, MapPin, Shield } from "lucide-rea
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Link } from "react-router-dom";
 import { isAuthenticated } from "@/lib/auth";
+import ShoppingCartComponent from "./ShoppingCart";
+import { useProducts } from "@/contexts/ProductContext";
 
 const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const authenticated = isAuthenticated();
+  const { searchProducts } = useProducts();
 
   const navItems = [
     { name: "Home", href: "#home" },
@@ -30,8 +32,14 @@ const Header = () => {
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      // For now, scroll to categories section
-      handleNavClick('#categories');
+      // Scroll to products section and trigger search
+      const productsSection = document.querySelector('#products');
+      if (productsSection) {
+        productsSection.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        // If products section doesn't exist, scroll to categories
+        handleNavClick('#categories');
+      }
       setSearchQuery("");
     }
   };
@@ -110,12 +118,7 @@ const Header = () => {
               </Button>
             </div>
             
-            <Button variant="automotive-outline" size="icon" className="relative">
-              <ShoppingCart className="w-4 h-4" />
-              <span className="absolute -top-1 -right-1 bg-automotive-blue text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                0
-              </span>
-            </Button>
+            <ShoppingCartComponent />
 
             {/* Mobile Menu */}
             <Sheet>
