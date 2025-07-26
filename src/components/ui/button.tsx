@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -18,9 +19,9 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        automotive: "bg-gradient-to-r from-automotive-orange to-automotive-red text-white hover:shadow-automotive transition-all duration-300 hover:scale-105 shadow-lg",
-        "automotive-outline": "border-2 border-automotive-orange bg-transparent text-automotive-orange hover:bg-automotive-orange hover:text-white transition-all duration-300 hover:shadow-glow",
-        hero: "bg-gradient-to-r from-automotive-orange/20 via-automotive-red/20 to-automotive-yellow/20 backdrop-blur-sm text-white border border-automotive-yellow/30 hover:bg-automotive-orange/30 hover:shadow-glow transition-all duration-300"
+        automotive: "bg-gradient-to-r from-automotive-blue/90 to-automotive-blue text-white hover:from-automotive-blue to-automotive-blue-dark transition-all duration-300 hover:shadow-lg shadow-automotive",
+        "automotive-outline": "border-2 border-automotive-blue/70 bg-transparent text-automotive-blue hover:bg-automotive-blue/10 transition-all duration-300",
+        hero: "bg-gradient-to-r from-automotive-blue/20 via-automotive-blue/15 to-automotive-blue/20 backdrop-blur-sm text-foreground border border-automotive-blue/30 hover:bg-automotive-blue/30 transition-all duration-300"
       },
       size: {
         default: "h-10 px-4 py-2",
