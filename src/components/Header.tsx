@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,6 +7,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Link } from "react-router-dom";
 import { isAuthenticated } from "@/lib/auth";
 import ShoppingCartComponent from "./ShoppingCart";
+import ThemeToggle from "./ThemeToggle";
 import { useProducts } from "@/contexts/ProductContext";
 
 const Header = () => {
@@ -45,7 +47,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-white shadow-lg sticky top-0 z-50">
+    <header className="bg-background shadow-lg sticky top-0 z-50 border-b">
       {/* Top Bar */}
       <div className="bg-automotive-blue text-white py-2">
         <div className="container mx-auto px-4 flex justify-between items-center text-sm">
@@ -70,14 +72,14 @@ const Header = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-automotive-blue to-automotive-blue-dark rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-automotive-blue to-automotive-blue rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-xl">TM</span>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-automotive-dark">
+              <h1 className="text-2xl font-bold text-foreground">
                 TM Auto Express
               </h1>
-              <p className="text-sm text-automotive-gray">Premium Auto Parts</p>
+              <p className="text-sm text-muted-foreground">Premium Auto Parts</p>
             </div>
           </Link>
 
@@ -87,7 +89,7 @@ const Header = () => {
               <button
                 key={item.name}
                 onClick={() => handleNavClick(item.href)}
-                className="text-automotive-dark hover:text-automotive-blue transition-colors font-medium"
+                className="text-foreground hover:text-automotive-blue transition-colors font-medium"
               >
                 {item.name}
               </button>
@@ -103,7 +105,7 @@ const Header = () => {
             )}
           </nav>
 
-          {/* Search & Cart */}
+          {/* Search, Theme Toggle & Cart */}
           <div className="flex items-center gap-4">
             <div className="hidden md:flex items-center gap-2">
               <Input
@@ -118,6 +120,7 @@ const Header = () => {
               </Button>
             </div>
             
+            <ThemeToggle />
             <ShoppingCartComponent />
 
             {/* Mobile Menu */}
@@ -133,7 +136,7 @@ const Header = () => {
                     <button
                       key={item.name}
                       onClick={() => handleNavClick(item.href)}
-                      className="text-lg font-medium text-automotive-dark hover:text-automotive-blue transition-colors text-left"
+                      className="text-lg font-medium text-foreground hover:text-automotive-blue transition-colors text-left"
                     >
                       {item.name}
                     </button>

@@ -29,7 +29,7 @@ export const useProducts = () => {
   return context;
 };
 
-// Sample automotive parts data
+// Updated sample automotive parts data with correct interface
 const sampleProducts: Product[] = [
   {
     id: '1',
@@ -37,6 +37,7 @@ const sampleProducts: Product[] = [
     description: 'High-performance ceramic brake pads for superior stopping power',
     price: 89.99,
     category: 'braking',
+    brand: 'Bosch',
     stock_quantity: 25,
     part_number: 'BP-FRONT-001',
     compatible_vehicles: 'Toyota Camry 2018-2023, Honda Accord 2016-2022',
@@ -50,6 +51,7 @@ const sampleProducts: Product[] = [
     description: 'Performance air filter for improved engine airflow',
     price: 34.99,
     category: 'engine',
+    brand: 'K&N',
     stock_quantity: 15,
     part_number: 'AF-HF-002',
     compatible_vehicles: 'Ford F-150 2015-2023, Chevrolet Silverado 2014-2022',
@@ -63,6 +65,7 @@ const sampleProducts: Product[] = [
     description: 'Heavy-duty shock absorber for smooth ride comfort',
     price: 129.99,
     category: 'suspension',
+    brand: 'Monroe',
     stock_quantity: 8,
     part_number: 'SA-REAR-003',
     compatible_vehicles: 'Nissan Altima 2019-2023, Hyundai Elantra 2017-2022',
@@ -76,6 +79,7 @@ const sampleProducts: Product[] = [
     description: 'Ultra-bright LED headlight conversion kit',
     price: 79.99,
     category: 'electrical',
+    brand: 'Philips',
     stock_quantity: 20,
     part_number: 'LED-HL-004',
     compatible_vehicles: 'BMW 3 Series 2016-2023, Audi A4 2017-2023',
@@ -89,6 +93,7 @@ const sampleProducts: Product[] = [
     description: 'OEM-quality replacement front bumper cover',
     price: 299.99,
     category: 'body',
+    brand: 'OEM',
     stock_quantity: 5,
     part_number: 'BC-FRONT-005',
     compatible_vehicles: 'Honda Civic 2016-2021, Toyota Corolla 2017-2022',
@@ -102,6 +107,7 @@ const sampleProducts: Product[] = [
     description: 'Complete clutch replacement kit with pressure plate',
     price: 249.99,
     category: 'transmission',
+    brand: 'LUK',
     stock_quantity: 12,
     part_number: 'CK-COMP-006',
     compatible_vehicles: 'Mazda 6 2014-2020, Subaru Impreza 2015-2022',

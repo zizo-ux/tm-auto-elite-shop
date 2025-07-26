@@ -1,4 +1,3 @@
-
 export interface Product {
   id: string;
   name: string;
@@ -8,7 +7,9 @@ export interface Product {
   category: string;
   brand: string;
   stock_quantity: number;
-  images: string[];
+  image_url: string;
+  part_number: string;
+  compatible_vehicles: string;
   created_at: string;
   updated_at: string;
 }
