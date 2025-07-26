@@ -1,5 +1,4 @@
 
-
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
@@ -7,25 +6,25 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 220 15% 20%;
-    --card: 0 0% 100%;
-    --card-foreground: 220 15% 20%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 20%;
-    --primary: 220 15% 25%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 97%;
-    --secondary-foreground: 220 15% 25%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 220 10% 45%;
-    --accent: 210 40% 95%;
-    --accent-foreground: 220 15% 25%;
-    --destructive: 0 75% 55%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 215 16% 47%;
+    --background: 220 15% 8%;
+    --foreground: 213 31% 91%;
+    --card: 220 15% 10%;
+    --card-foreground: 213 31% 91%;
+    --popover: 220 15% 8%;
+    --popover-foreground: 213 31% 91%;
+    --primary: 210 40% 85%;
+    --primary-foreground: 220 15% 12%;
+    --secondary: 220 15% 15%;
+    --secondary-foreground: 213 31% 91%;
+    --muted: 220 15% 15%;
+    --muted-foreground: 217 10% 64%;
+    --accent: 220 15% 18%;
+    --accent-foreground: 213 31% 91%;
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 213 31% 91%;
+    --border: 220 15% 18%;
+    --input: 220 15% 18%;
+    --ring: 215 25% 70%;
     --radius: 0.5rem;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
@@ -33,62 +32,7 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
 
-    /* Softer Automotive Brand Colors */
-    --automotive-orange: 25 85% 58%;
-    --automotive-red: 0 70% 58%;
-    --automotive-blue: 215 80% 50%;
-    --automotive-blue-dark: 215 80% 35%;
-    --automotive-blue-light: 215 50% 96%;
-    --automotive-yellow: 45 85% 55%;
-    --automotive-green: 120 50% 45%;
-    --automotive-purple: 270 40% 50%;
-    --automotive-charcoal: 220 15% 25%;
-    --automotive-dark: 220 15% 20%;
-    --automotive-warm-gray: 30 8% 50%;
-    --automotive-gray: 220 10% 55%;
-    --automotive-cream: 45 25% 97%;
-
-    /* Category Colors - Softer palette */
-    --category-engine: 0 70% 58%;
-    --category-suspension: 215 70% 55%;
-    --category-braking: 25 75% 55%;
-    --category-electrical: 45 80% 60%;
-    --category-body: 120 45% 50%;
-    --category-transmission: 270 40% 55%;
-
-    /* Sidebar */
-    --sidebar-background: 210 40% 98%;
-    --sidebar-foreground: 220 15% 25%;
-    --sidebar-primary: 220 15% 25%;
-    --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 210 40% 96%;
-    --sidebar-accent-foreground: 220 15% 25%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 215 16% 47%;
-  }
-
-  .dark {
-    --background: 224 20% 8%;
-    --foreground: 213 31% 91%;
-    --card: 224 20% 10%;
-    --card-foreground: 213 31% 91%;
-    --popover: 224 20% 8%;
-    --popover-foreground: 213 31% 91%;
-    --primary: 210 40% 85%;
-    --primary-foreground: 224 20% 12%;
-    --secondary: 224 15% 15%;
-    --secondary-foreground: 213 31% 91%;
-    --muted: 224 15% 15%;
-    --muted-foreground: 217 10% 64%;
-    --accent: 224 15% 18%;
-    --accent-foreground: 213 31% 91%;
-    --destructive: 0 65% 50%;
-    --destructive-foreground: 213 31% 91%;
-    --border: 224 15% 18%;
-    --input: 224 15% 18%;
-    --ring: 215 25% 70%;
-
-    /* Enhanced Dark Theme Automotive Colors - More balanced */
+    /* Enhanced Dark Theme Automotive Colors */
     --automotive-orange: 25 75% 60%;
     --automotive-red: 0 60% 60%;
     --automotive-blue: 215 70% 60%;
@@ -97,20 +41,75 @@
     --automotive-yellow: 45 75% 65%;
     --automotive-green: 120 40% 55%;
     --automotive-purple: 270 35% 60%;
-    --automotive-charcoal: 224 15% 30%;
-    --automotive-dark: 213 31% 91%;
+    --automotive-charcoal: 220 15% 25%;
+    --automotive-dark: 220 15% 8%;
     --automotive-warm-gray: 30 8% 65%;
     --automotive-gray: 217 10% 70%;
     --automotive-cream: 45 15% 16%;
 
-    /* Sidebar Dark - Better contrast */
-    --sidebar-background: 224 20% 10%;
+    /* Category Colors - Dark theme optimized */
+    --category-engine: 0 60% 60%;
+    --category-suspension: 215 70% 60%;
+    --category-braking: 25 75% 60%;
+    --category-electrical: 45 75% 65%;
+    --category-body: 120 40% 55%;
+    --category-transmission: 270 35% 60%;
+
+    /* Sidebar Dark */
+    --sidebar-background: 220 15% 10%;
     --sidebar-foreground: 213 31% 91%;
     --sidebar-primary: 210 40% 85%;
-    --sidebar-primary-foreground: 224 20% 12%;
-    --sidebar-accent: 224 15% 18%;
+    --sidebar-primary-foreground: 220 15% 12%;
+    --sidebar-accent: 220 15% 18%;
     --sidebar-accent-foreground: 213 31% 91%;
-    --sidebar-border: 224 15% 18%;
+    --sidebar-border: 220 15% 18%;
+    --sidebar-ring: 215 25% 70%;
+  }
+
+  .dark {
+    --background: 220 15% 8%;
+    --foreground: 213 31% 91%;
+    --card: 220 15% 10%;
+    --card-foreground: 213 31% 91%;
+    --popover: 220 15% 8%;
+    --popover-foreground: 213 31% 91%;
+    --primary: 210 40% 85%;
+    --primary-foreground: 220 15% 12%;
+    --secondary: 220 15% 15%;
+    --secondary-foreground: 213 31% 91%;
+    --muted: 220 15% 15%;
+    --muted-foreground: 217 10% 64%;
+    --accent: 220 15% 18%;
+    --accent-foreground: 213 31% 91%;
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 213 31% 91%;
+    --border: 220 15% 18%;
+    --input: 220 15% 18%;
+    --ring: 215 25% 70%;
+
+    /* Enhanced Dark Theme Automotive Colors */
+    --automotive-orange: 25 75% 60%;
+    --automotive-red: 0 60% 60%;
+    --automotive-blue: 215 70% 60%;
+    --automotive-blue-dark: 215 80% 45%;
+    --automotive-blue-light: 215 30% 20%;
+    --automotive-yellow: 45 75% 65%;
+    --automotive-green: 120 40% 55%;
+    --automotive-purple: 270 35% 60%;
+    --automotive-charcoal: 220 15% 25%;
+    --automotive-dark: 220 15% 8%;
+    --automotive-warm-gray: 30 8% 65%;
+    --automotive-gray: 217 10% 70%;
+    --automotive-cream: 45 15% 16%;
+
+    /* Sidebar Dark */
+    --sidebar-background: 220 15% 10%;
+    --sidebar-foreground: 213 31% 91%;
+    --sidebar-primary: 210 40% 85%;
+    --sidebar-primary-foreground: 220 15% 12%;
+    --sidebar-accent: 220 15% 18%;
+    --sidebar-accent-foreground: 213 31% 91%;
+    --sidebar-border: 220 15% 18%;
     --sidebar-ring: 215 25% 70%;
   }
 }
@@ -127,7 +126,7 @@
     font-variation-settings: "opsz" 32;
   }
 
-  /* Enhanced scrollbar for better visibility */
+  /* Enhanced scrollbar for dark theme */
   ::-webkit-scrollbar {
     width: 8px;
   }
@@ -137,19 +136,11 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-muted-foreground/30 rounded-full;
-  }
-
-  .dark ::-webkit-scrollbar-thumb {
-    @apply bg-muted-foreground/40;
-  }
-
-  .dark ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/60;
+    @apply bg-muted-foreground/40 rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/50;
+    @apply bg-muted-foreground/60;
   }
 }
 
@@ -166,16 +157,12 @@
 }
 
 .shadow-automotive {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
 }
 
-.dark .shadow-automotive {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
-}
-
-/* Improved focus states */
+/* Improved focus states for dark theme */
 .focus-automotive {
-  @apply focus:outline-none focus:ring-2 focus:ring-automotive-blue/20 focus:border-automotive-blue;
+  @apply focus:outline-none focus:ring-2 focus:ring-automotive-blue/30 focus:border-automotive-blue;
 }
 
 /* Smooth transitions */
@@ -184,4 +171,3 @@
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
-
