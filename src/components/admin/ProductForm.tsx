@@ -7,17 +7,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Product } from "@/types";
-import { ImageUpload } from "./ImageUpload";
+import ImageUpload from "./ImageUpload";
 
 interface ProductFormProps {
   product?: Product;
-  onSubmit: (product: Omit<Product, 'id' | 'created_at' | 'updated_at'>) => void;
+  onSuccess: () => void;
   onCancel: () => void;
 }
 
-export const ProductForm: React.FC<ProductFormProps> = ({
+const ProductForm: React.FC<ProductFormProps> = ({
   product,
-  onSubmit,
+  onSuccess,
   onCancel
 }) => {
   const [formData, setFormData] = useState({
@@ -35,11 +35,15 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    // TODO: Implement actual product save logic
+    console.log('Saving product:', formData);
+    onSuccess();
   };
 
-  const handleImageUpload = (url: string) => {
-    setFormData(prev => ({ ...prev, image_url: url }));
+  const handleImageUpload = (images: string[]) => {
+    if (images.length > 0) {
+      setFormData(prev => ({ ...prev, image_url: images[0] }));
+    }
   };
 
   return (
@@ -157,8 +161,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({
           <div>
             <Label>Product Image</Label>
             <ImageUpload
-              currentImage={formData.image_url}
-              onImageUpload={handleImageUpload}
+              images={formData.image_url ? [formData.image_url] : []}
+              onImagesChange={handleImageUpload}
+              maxImages={1}
             />
           </div>
 
@@ -175,3 +180,5 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     </Card>
   );
 };
+
+export default ProductForm;

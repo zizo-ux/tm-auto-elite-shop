@@ -12,20 +12,26 @@ import { Product } from "@/types";
 interface ProductTableProps {
   products: Product[];
   onEdit: (product: Product) => void;
-  onDelete: (id: string) => void;
   onAdd: () => void;
+  onRefresh: () => void;
 }
 
-export const ProductTable: React.FC<ProductTableProps> = ({
+const ProductTable: React.FC<ProductTableProps> = ({
   products,
   onEdit,
-  onDelete,
-  onAdd
+  onAdd,
+  onRefresh
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+  const handleDelete = (id: string) => {
+    // TODO: Implement delete functionality
+    console.log('Delete product:', id);
+    onRefresh();
+  };
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -43,14 +49,14 @@ export const ProductTable: React.FC<ProductTableProps> = ({
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
-      'engine': 'bg-red-100 text-red-800',
-      'brakes': 'bg-orange-100 text-orange-800',
-      'suspension': 'bg-blue-100 text-blue-800',
-      'electrical': 'bg-yellow-100 text-yellow-800',
-      'body': 'bg-green-100 text-green-800',
-      'transmission': 'bg-purple-100 text-purple-800'
+      'engine': 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300',
+      'brakes': 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-300',
+      'suspension': 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300',
+      'electrical': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300',
+      'body': 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300',
+      'transmission': 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300'
     };
-    return colors[category] || 'bg-gray-100 text-gray-800';
+    return colors[category] || 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300';
   };
 
   return (
@@ -66,7 +72,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({
         
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
               placeholder="Search products..."
               value={searchTerm}
@@ -116,7 +122,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({
               {paginatedProducts.map((product) => (
                 <TableRow key={product.id}>
                   <TableCell>
-                    <div className="w-12 h-12 rounded-md overflow-hidden bg-gray-100">
+                    <div className="w-12 h-12 rounded-md overflow-hidden bg-muted">
                       {product.image_url ? (
                         <img
                           src={product.image_url}
@@ -124,8 +130,8 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                          <span className="text-gray-400 text-xs">No Image</span>
+                        <div className="w-full h-full bg-muted flex items-center justify-center">
+                          <span className="text-muted-foreground text-xs">No Image</span>
                         </div>
                       )}
                     </div>
@@ -133,7 +139,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                   <TableCell>
                     <div>
                       <div className="font-medium">{product.name}</div>
-                      <div className="text-sm text-gray-500 line-clamp-2">
+                      <div className="text-sm text-muted-foreground line-clamp-2">
                         {product.description}
                       </div>
                     </div>
@@ -151,7 +157,7 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                     <div>
                       <div className="font-medium">R{product.price}</div>
                       {product.sale_price && product.sale_price < product.price && (
-                        <div className="text-sm text-green-600">
+                        <div className="text-sm text-green-600 dark:text-green-400">
                           Sale: R{product.sale_price}
                         </div>
                       )}
@@ -179,8 +185,8 @@ export const ProductTable: React.FC<ProductTableProps> = ({
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => onDelete(product.id)}
-                        className="text-red-600 hover:text-red-700"
+                        onClick={() => handleDelete(product.id)}
+                        className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -219,3 +225,5 @@ export const ProductTable: React.FC<ProductTableProps> = ({
     </Card>
   );
 };
+
+export default ProductTable;
