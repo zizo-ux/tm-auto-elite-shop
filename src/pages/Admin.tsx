@@ -5,8 +5,9 @@ import AdminLayout from '@/components/admin/AdminLayout';
 import Dashboard from '@/components/admin/Dashboard';
 import ProductTable from '@/components/admin/ProductTable';
 import ProductForm from '@/components/admin/ProductForm';
-import { isAuthenticated } from '@/lib/auth';
-import { getProducts, getDiagnoseRequests, getDashboardStats } from '@/lib/storage';
+import { useAuth } from '@/contexts/AuthContext';
+import { productService } from '@/services/productService';
+import { diagnoseService } from '@/services/diagnoseService';
 import { Product, DashboardStats, DiagnoseRequest } from '@/types';
 
 const Admin = () => {
@@ -22,24 +23,49 @@ const Admin = () => {
   });
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showProductForm, setShowProductForm] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    if (!isAuthenticated()) {
+    if (!authLoading && !user) {
       navigate('/login');
       return;
     }
-    loadData();
-  }, [navigate]);
+    if (user) {
+      loadData();
+    }
+  }, [user, authLoading, navigate]);
 
-  const loadData = () => {
-    const productsData = getProducts();
-    const requestsData = getDiagnoseRequests();
-    const statsData = getDashboardStats();
-    
-    setProducts(productsData);
-    setRequests(requestsData);
-    setStats(statsData);
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      const [productsData, requestsData] = await Promise.all([
+        productService.getProducts(),
+        diagnoseService.getAllRequests()
+      ]);
+      
+      setProducts(productsData);
+      setRequests(requestsData);
+      
+      // Calculate stats
+      const stats: DashboardStats = {
+        total_products: productsData.length,
+        low_stock_count: productsData.filter(p => p.stock_quantity < 10).length,
+        total_requests: requestsData.length,
+        pending_requests: requestsData.filter(r => r.status === 'pending').length,
+        categories: productsData.reduce((acc, product) => {
+          acc[product.category] = (acc[product.category] || 0) + 1;
+          return acc;
+        }, {} as { [key: string]: number })
+      };
+      
+      setStats(stats);
+    } catch (error) {
+      console.error('Error loading data:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleProductFormSuccess = () => {
@@ -62,6 +88,17 @@ const Admin = () => {
     setEditingProduct(null);
     setShowProductForm(true);
   };
+
+  if (authLoading || loading) {
+    return (
+      <div className="min-h-screen bg-automotive-cream/30 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-automotive-blue mx-auto mb-4"></div>
+          <p className="text-automotive-charcoal">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   const renderContent = () => {
     if (showProductForm) {

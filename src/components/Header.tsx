@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Search, Menu, X, ShoppingCart, Phone, MapPin, Shield } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Link } from "react-router-dom";
-import { isAuthenticated } from "@/lib/auth";
+import { useAuth } from "@/contexts/AuthContext";
 import ShoppingCartComponent from "./ShoppingCart";
 import ThemeToggle from "./ThemeToggle";
 import { useProducts } from "@/contexts/ProductContext";
@@ -13,7 +13,7 @@ import { useProducts } from "@/contexts/ProductContext";
 const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const authenticated = isAuthenticated();
+  const { user } = useAuth();
   const { searchProducts } = useProducts();
 
   const navItems = [
@@ -94,13 +94,21 @@ const Header = () => {
                 {item.name}
               </button>
             ))}
-            {authenticated && (
+            {user ? (
               <Link
                 to="/admin"
                 className="flex items-center gap-2 text-automotive-orange hover:text-automotive-red transition-colors font-medium"
               >
                 <Shield className="w-4 h-4" />
                 Admin
+              </Link>
+            ) : (
+              <Link
+                to="/login"
+                className="flex items-center gap-2 text-automotive-blue hover:text-automotive-red transition-colors font-medium"
+              >
+                <Shield className="w-4 h-4" />
+                Login
               </Link>
             )}
           </nav>
@@ -141,13 +149,21 @@ const Header = () => {
                       {item.name}
                     </button>
                   ))}
-                  {authenticated && (
+                  {user ? (
                     <Link
                       to="/admin"
                       className="flex items-center gap-2 text-lg font-medium text-automotive-orange hover:text-automotive-red transition-colors"
                     >
                       <Shield className="w-4 h-4" />
                       Admin Panel
+                    </Link>
+                  ) : (
+                    <Link
+                      to="/login"
+                      className="flex items-center gap-2 text-lg font-medium text-automotive-blue hover:text-automotive-red transition-colors"
+                    >
+                      <Shield className="w-4 h-4" />
+                      Login
                     </Link>
                   )}
                   <div className="mt-4 pt-4 border-t">

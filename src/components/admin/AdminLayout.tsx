@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { logout } from '@/lib/auth';
+import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -23,14 +23,24 @@ const AdminLayout = ({ children, activeSection, onSectionChange }: AdminLayoutPr
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { signOut, user } = useAuth();
 
-  const handleLogout = () => {
-    logout();
-    toast({
-      title: "Logged Out",
-      description: "You have been logged out successfully",
-    });
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "Logged Out",
+        description: "You have been logged out successfully",
+      });
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to log out",
+        variant: "destructive",
+      });
+    }
   };
 
   const menuItems = [
@@ -117,9 +127,16 @@ const AdminLayout = ({ children, activeSection, onSectionChange }: AdminLayoutPr
             </Button>
             <div className="flex items-center gap-4">
               <div className="w-8 h-8 bg-gradient-to-br from-automotive-orange to-automotive-red rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-sm">A</span>
+                <span className="text-white font-bold text-sm">
+                  {user?.email?.charAt(0).toUpperCase() || 'U'}
+                </span>
               </div>
-              <span className="text-sm font-medium text-automotive-charcoal">Admin User</span>
+              <div className="text-sm">
+                <span className="font-medium text-automotive-charcoal block">
+                  {user?.email || 'User'}
+                </span>
+                <span className="text-automotive-warm-gray text-xs">Admin</span>
+              </div>
             </div>
           </div>
         </div>
