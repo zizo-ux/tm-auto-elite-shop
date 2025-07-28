@@ -22,7 +22,7 @@ export const diagnoseService = {
       throw error;
     }
     
-    return data;
+    return data as DiagnoseRequest;
   },
 
   // Get all diagnose requests (for admin)
@@ -37,7 +37,7 @@ export const diagnoseService = {
       throw error;
     }
     
-    return data || [];
+    return (data || []) as DiagnoseRequest[];
   },
 
   // Get user's diagnose requests
@@ -52,7 +52,7 @@ export const diagnoseService = {
       throw error;
     }
     
-    return data || [];
+    return (data || []) as DiagnoseRequest[];
   },
 
   // Update a diagnose request
@@ -69,6 +69,6 @@ export const diagnoseService = {
       throw error;
     }
     
-    return data;
+    return data as DiagnoseRequest;
   }
 };
