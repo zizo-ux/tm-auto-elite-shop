@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import ImageUpload from '@/components/admin/ImageUpload';
-import { saveDiagnoseRequest } from '@/lib/storage';
+import { diagnoseService } from '@/services/diagnoseService';
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle, Car } from 'lucide-react';
 
@@ -48,7 +48,7 @@ const DiagnoseForm = ({ onSuccess }: DiagnoseFormProps) => {
     setIsSubmitting(true);
 
     try {
-      const request = saveDiagnoseRequest(formData);
+      const request = await diagnoseService.createRequest(formData);
       toast({
         title: "Request Submitted",
         description: "Your diagnostic request has been submitted successfully!",

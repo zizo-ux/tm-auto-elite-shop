@@ -14,7 +14,219 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      diagnose_requests: {
+        Row: {
+          address: string
+          admin_response: string | null
+          car_make: string
+          car_model: string
+          car_year: number
+          created_at: string
+          customer_name: string
+          email: string
+          id: string
+          images: string[] | null
+          phone: string
+          problem_description: string
+          recommended_products: string[] | null
+          service_type: string
+          status: string
+          updated_at: string
+          urgency_level: string
+          user_id: string | null
+          vin: string | null
+        }
+        Insert: {
+          address: string
+          admin_response?: string | null
+          car_make: string
+          car_model: string
+          car_year: number
+          created_at?: string
+          customer_name: string
+          email: string
+          id?: string
+          images?: string[] | null
+          phone: string
+          problem_description: string
+          recommended_products?: string[] | null
+          service_type: string
+          status?: string
+          updated_at?: string
+          urgency_level: string
+          user_id?: string | null
+          vin?: string | null
+        }
+        Update: {
+          address?: string
+          admin_response?: string | null
+          car_make?: string
+          car_model?: string
+          car_year?: number
+          created_at?: string
+          customer_name?: string
+          email?: string
+          id?: string
+          images?: string[] | null
+          phone?: string
+          problem_description?: string
+          recommended_products?: string[] | null
+          service_type?: string
+          status?: string
+          updated_at?: string
+          urgency_level?: string
+          user_id?: string | null
+          vin?: string | null
+        }
+        Relationships: []
+      }
+      order_items: {
+        Row: {
+          created_at: string
+          id: string
+          order_id: string | null
+          price: number
+          product_id: string | null
+          quantity: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          price: number
+          product_id?: string | null
+          quantity: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          order_id?: string | null
+          price?: number
+          product_id?: string | null
+          quantity?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          created_at: string
+          id: string
+          shipping_address: string
+          status: string
+          total_amount: number
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          shipping_address: string
+          status?: string
+          total_amount: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          shipping_address?: string
+          status?: string
+          total_amount?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          brand: string
+          category: string
+          compatible_vehicles: string
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          name: string
+          part_number: string
+          price: number
+          sale_price: number | null
+          stock_quantity: number
+          updated_at: string
+        }
+        Insert: {
+          brand: string
+          category: string
+          compatible_vehicles: string
+          created_at?: string
+          description: string
+          id?: string
+          image_url?: string | null
+          name: string
+          part_number: string
+          price: number
+          sale_price?: number | null
+          stock_quantity?: number
+          updated_at?: string
+        }
+        Update: {
+          brand?: string
+          category?: string
+          compatible_vehicles?: string
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          name?: string
+          part_number?: string
+          price?: number
+          sale_price?: number | null
+          stock_quantity?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

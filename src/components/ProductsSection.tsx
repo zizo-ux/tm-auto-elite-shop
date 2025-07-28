@@ -1,17 +1,20 @@
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Filter } from "lucide-react";
+import { Search, Filter, Loader2 } from "lucide-react";
 import { useProducts } from "@/contexts/ProductContext";
 import ProductCard from "./ProductCard";
+import { Product } from "@/types";
 
 const ProductsSection = () => {
-  const { products, searchProducts } = useProducts();
+  const { products, loading, error, searchProducts } = useProducts();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("name");
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   const categories = [
     { value: "all", label: "All Categories" },
@@ -23,8 +26,29 @@ const ProductsSection = () => {
     { value: "transmission", label: "Transmission" }
   ];
 
+  // Handle search with debouncing
+  useEffect(() => {
+    const timeoutId = setTimeout(async () => {
+      if (searchQuery.trim()) {
+        setIsSearching(true);
+        try {
+          const results = await searchProducts(searchQuery);
+          setSearchResults(results);
+        } catch (err) {
+          console.error('Search error:', err);
+        } finally {
+          setIsSearching(false);
+        }
+      } else {
+        setSearchResults([]);
+      }
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, searchProducts]);
+
   const filteredAndSortedProducts = useMemo(() => {
-    let filtered = searchQuery ? searchProducts(searchQuery) : products;
+    let filtered = searchQuery ? searchResults : products;
     
     if (selectedCategory !== "all") {
       filtered = filtered.filter(product => product.category === selectedCategory);
@@ -44,10 +68,41 @@ const ProductsSection = () => {
           return 0;
       }
     });
-  }, [products, searchProducts, searchQuery, selectedCategory, sortBy]);
+  }, [products, searchResults, searchQuery, selectedCategory, sortBy]);
+
+  if (loading) {
+    return (
+      <section id="products" className="py-20 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
+            <p className="text-automotive-gray">Loading products...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section id="products" className="py-20 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <p className="text-red-500 mb-4">{error}</p>
+            <Button 
+              variant="automotive"
+              onClick={() => window.location.reload()}
+            >
+              Retry
+            </Button>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
-    <section id="products" className="py-20 bg-white">
+    <section id="products" className="py-20 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-automotive-dark mb-4">
@@ -70,6 +125,9 @@ const ProductsSection = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
                 />
+                {isSearching && (
+                  <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 animate-spin" />
+                )}
               </div>
             </div>
             
