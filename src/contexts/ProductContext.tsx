@@ -22,6 +22,9 @@ interface ProductContextType {
   searchProducts: (query: string) => Promise<Product[]>;
   getProductsByCategory: (category: string) => Promise<Product[]>;
   refreshProducts: () => Promise<void>;
+  createProduct: (product: Omit<Product, 'id' | 'created_at' | 'updated_at'>) => Promise<Product>;
+  updateProduct: (id: string, updates: Partial<Product>) => Promise<Product>;
+  deleteProduct: (id: string) => Promise<void>;
 }
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
@@ -88,6 +91,40 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     await loadProducts();
   };
 
+  const createProduct = async (productData: Omit<Product, 'id' | 'created_at' | 'updated_at'>): Promise<Product> => {
+    try {
+      const newProduct = await productService.createProduct(productData);
+      setProducts(prev => [...prev, newProduct]);
+      return newProduct;
+    } catch (error) {
+      console.error('Error creating product:', error);
+      throw error;
+    }
+  };
+
+  const updateProduct = async (id: string, updates: Partial<Product>): Promise<Product> => {
+    try {
+      const updatedProduct = await productService.updateProduct(id, updates);
+      setProducts(prev => prev.map(p => p.id === id ? updatedProduct : p));
+      return updatedProduct;
+    } catch (error) {
+      console.error('Error updating product:', error);
+      throw error;
+    }
+  };
+
+  const deleteProduct = async (id: string): Promise<void> => {
+    try {
+      await productService.deleteProduct(id);
+      setProducts(prev => prev.filter(p => p.id !== id));
+      // Also remove from cart if present
+      setCartItems(prev => prev.filter(item => item.id !== id));
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      throw error;
+    }
+  };
+
   const addToCart = (product: Product, quantity = 1) => {
     setCartItems(prev => {
       const existingItem = prev.find(item => item.id === product.id);
@@ -99,6 +136,11 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
         );
       }
       return [...prev, { ...product, quantity }];
+    });
+
+    toast({
+      title: "Added to Cart",
+      description: `${product.name} has been added to your cart`,
     });
   };
 
@@ -174,7 +216,10 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
       getCartItemCount,
       searchProducts,
       getProductsByCategory,
-      refreshProducts
+      refreshProducts,
+      createProduct,
+      updateProduct,
+      deleteProduct
     }}>
       {children}
     </ProductContext.Provider>

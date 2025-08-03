@@ -7,6 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Product } from "@/types";
+import { productService } from "@/services/productService";
+import { useToast } from "@/hooks/use-toast";
 import ImageUpload from "./ImageUpload";
 
 interface ProductFormProps {
@@ -33,11 +35,50 @@ const ProductForm: React.FC<ProductFormProps> = ({
     compatible_vehicles: product?.compatible_vehicles || ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement actual product save logic
-    console.log('Saving product:', formData);
-    onSuccess();
+    
+    if (!formData.name || !formData.part_number || !formData.brand || !formData.category || !formData.compatible_vehicles) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill in all required fields",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      if (product) {
+        // Update existing product
+        await productService.updateProduct(product.id, formData);
+        toast({
+          title: "Success",
+          description: "Product updated successfully",
+        });
+      } else {
+        // Create new product
+        await productService.createProduct(formData);
+        toast({
+          title: "Success",
+          description: "Product created successfully",
+        });
+      }
+      onSuccess();
+    } catch (error) {
+      console.error('Error saving product:', error);
+      toast({
+        title: "Error",
+        description: `Failed to ${product ? 'update' : 'create'} product. Please try again.`,
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleImageUpload = (images: string[]) => {
@@ -55,7 +96,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="name">Product Name</Label>
+              <Label htmlFor="name">Product Name *</Label>
               <Input
                 id="name"
                 value={formData.name}
@@ -65,7 +106,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
             </div>
             
             <div>
-              <Label htmlFor="part_number">Part Number</Label>
+              <Label htmlFor="part_number">Part Number *</Label>
               <Input
                 id="part_number"
                 value={formData.part_number}
@@ -75,13 +116,14 @@ const ProductForm: React.FC<ProductFormProps> = ({
             </div>
 
             <div>
-              <Label htmlFor="price">Price (R)</Label>
+              <Label htmlFor="price">Price (R) *</Label>
               <Input
                 id="price"
                 type="number"
                 step="0.01"
+                min="0"
                 value={formData.price}
-                onChange={(e) => setFormData(prev => ({ ...prev, price: parseFloat(e.target.value) }))}
+                onChange={(e) => setFormData(prev => ({ ...prev, price: parseFloat(e.target.value) || 0 }))}
                 required
               />
             </div>
@@ -92,13 +134,14 @@ const ProductForm: React.FC<ProductFormProps> = ({
                 id="sale_price"
                 type="number"
                 step="0.01"
-                value={formData.sale_price}
-                onChange={(e) => setFormData(prev => ({ ...prev, sale_price: parseFloat(e.target.value) }))}
+                min="0"
+                value={formData.sale_price || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, sale_price: parseFloat(e.target.value) || 0 }))}
               />
             </div>
 
             <div>
-              <Label htmlFor="category">Category</Label>
+              <Label htmlFor="category">Category *</Label>
               <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select category" />
@@ -115,7 +158,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
             </div>
 
             <div>
-              <Label htmlFor="brand">Brand</Label>
+              <Label htmlFor="brand">Brand *</Label>
               <Input
                 id="brand"
                 value={formData.brand}
@@ -125,19 +168,20 @@ const ProductForm: React.FC<ProductFormProps> = ({
             </div>
 
             <div>
-              <Label htmlFor="stock_quantity">Stock Quantity</Label>
+              <Label htmlFor="stock_quantity">Stock Quantity *</Label>
               <Input
                 id="stock_quantity"
                 type="number"
+                min="0"
                 value={formData.stock_quantity}
-                onChange={(e) => setFormData(prev => ({ ...prev, stock_quantity: parseInt(e.target.value) }))}
+                onChange={(e) => setFormData(prev => ({ ...prev, stock_quantity: parseInt(e.target.value) || 0 }))}
                 required
               />
             </div>
           </div>
 
           <div>
-            <Label htmlFor="compatible_vehicles">Compatible Vehicles</Label>
+            <Label htmlFor="compatible_vehicles">Compatible Vehicles *</Label>
             <Input
               id="compatible_vehicles"
               value={formData.compatible_vehicles}
@@ -148,7 +192,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
           </div>
 
           <div>
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">Description *</Label>
             <Textarea
               id="description"
               value={formData.description}
@@ -168,11 +212,18 @@ const ProductForm: React.FC<ProductFormProps> = ({
           </div>
 
           <div className="flex gap-2 justify-end">
-            <Button type="button" variant="outline" onClick={onCancel}>
+            <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
               Cancel
             </Button>
-            <Button type="submit" variant="automotive">
-              {product ? 'Update Product' : 'Add Product'}
+            <Button type="submit" variant="automotive" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  {product ? 'Updating...' : 'Creating...'}
+                </>
+              ) : (
+                product ? 'Update Product' : 'Add Product'
+              )}
             </Button>
           </div>
         </form>

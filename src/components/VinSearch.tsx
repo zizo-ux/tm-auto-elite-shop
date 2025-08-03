@@ -1,11 +1,13 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Car, Calendar, Wrench, Info } from "lucide-react";
+import { Search, Car, Calendar, Wrench, Info, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useProducts } from "@/contexts/ProductContext";
+import { vinService, VehicleInfo } from "@/services/vinService";
 import VinResults from "./VinResults";
 
 const VinSearch = () => {
@@ -15,7 +17,8 @@ const VinSearch = () => {
   const [year, setYear] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [vehicleInfo, setVehicleInfo] = useState(null);
+  const [vehicleInfo, setVehicleInfo] = useState<VehicleInfo | null>(null);
+  const [vinError, setVinError] = useState("");
   const { toast } = useToast();
   const { products } = useProducts();
 
@@ -26,23 +29,25 @@ const VinSearch = () => {
 
   const years = Array.from({ length: 30 }, (_, i) => (new Date().getFullYear() - i).toString());
 
-  const mockVinDecode = (vin: string) => {
-    // Simple mock VIN decoder - in real app, this would call an API
-    const mockData = {
-      make: "Toyota",
-      model: "Camry",
-      year: "2020",
-      engine: "2.5L 4-Cylinder"
-    };
-    return mockData;
-  };
-
-  const findCompatibleParts = (vehicleInfo: any) => {
-    // Simple compatibility matching - in real app, this would use a proper database
+  const findCompatibleParts = (vehicleInfo: VehicleInfo) => {
     return products.filter(product => 
       product.compatible_vehicles.toLowerCase().includes(vehicleInfo.make.toLowerCase()) ||
-      product.compatible_vehicles.toLowerCase().includes(vehicleInfo.model.toLowerCase())
+      product.compatible_vehicles.toLowerCase().includes(vehicleInfo.model.toLowerCase()) ||
+      product.compatible_vehicles.toLowerCase().includes(`${vehicleInfo.year}`)
     );
+  };
+
+  const handleVinChange = (value: string) => {
+    const cleanVin = value.toUpperCase().replace(/[^A-HJ-NPR-Z0-9]/g, '');
+    setVinNumber(cleanVin);
+    setVinError("");
+    
+    // Real-time validation feedback
+    if (cleanVin.length > 0 && cleanVin.length < 17) {
+      setVinError("VIN must be 17 characters long");
+    } else if (cleanVin.length === 17 && !vinService.validateVin(cleanVin)) {
+      setVinError("Invalid VIN format");
+    }
   };
 
   const handleVinSearch = async () => {
@@ -55,22 +60,38 @@ const VinSearch = () => {
       return;
     }
 
+    if (!vinService.validateVin(vinNumber)) {
+      toast({
+        title: "Invalid VIN",
+        description: "The VIN number format is invalid",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsSearching(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      const decodedVehicle = mockVinDecode(vinNumber);
+    try {
+      const decodedVehicle = await vinService.decodeVin(vinNumber);
       const compatibleParts = findCompatibleParts(decodedVehicle);
       
       setVehicleInfo(decodedVehicle);
-      setIsSearching(false);
       setShowResults(true);
       
       toast({
-        title: "VIN Search Complete",
+        title: "VIN Decoded Successfully",
         description: `Found ${compatibleParts.length} compatible parts for your ${decodedVehicle.year} ${decodedVehicle.make} ${decodedVehicle.model}`,
       });
-    }, 2000);
+    } catch (error) {
+      console.error('VIN decoding failed:', error);
+      toast({
+        title: "VIN Decoding Failed",
+        description: error instanceof Error ? error.message : "Failed to decode VIN. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   const handleManualSearch = async () => {
@@ -85,19 +106,20 @@ const VinSearch = () => {
 
     setIsSearching(true);
     
+    // Simulate brief loading for consistency
     setTimeout(() => {
-      const vehicleData = { make, model, year, engine: "Standard Engine" };
+      const vehicleData: VehicleInfo = { make, model, year, engine: "Standard Engine" };
       const compatibleParts = findCompatibleParts(vehicleData);
       
       setVehicleInfo(vehicleData);
-      setIsSearching(false);
       setShowResults(true);
+      setIsSearching(false);
       
       toast({
         title: "Search Complete",
         description: `Found ${compatibleParts.length} compatible parts for ${year} ${make} ${model}`,
       });
-    }, 1500);
+    }, 500);
   };
 
   const handleCloseResults = () => {
@@ -107,6 +129,7 @@ const VinSearch = () => {
     setMake("");
     setModel("");
     setYear("");
+    setVinError("");
   };
 
   if (showResults && vehicleInfo) {
@@ -156,30 +179,38 @@ const VinSearch = () => {
                   <Input
                     placeholder="1HGBH41JXMN109186"
                     value={vinNumber}
-                    onChange={(e) => setVinNumber(e.target.value.toUpperCase())}
+                    onChange={(e) => handleVinChange(e.target.value)}
                     maxLength={17}
-                    className="font-mono text-lg"
+                    className={`font-mono text-lg ${vinError ? 'border-red-500' : ''}`}
                   />
-                  <p className="text-xs text-automotive-gray mt-1">
-                    Characters entered: {vinNumber.length}/17
-                  </p>
+                  <div className="flex items-center justify-between mt-1">
+                    <p className="text-xs text-automotive-gray">
+                      Characters entered: {vinNumber.length}/17
+                    </p>
+                    {vinError && (
+                      <p className="text-xs text-red-500 flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" />
+                        {vinError}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 <Button 
                   onClick={handleVinSearch}
                   variant="automotive" 
                   className="w-full"
-                  disabled={isSearching}
+                  disabled={isSearching || !!vinError || vinNumber.length !== 17}
                 >
                   {isSearching ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Searching...
+                      Decoding VIN...
                     </>
                   ) : (
                     <>
                       <Search className="w-4 h-4 mr-2" />
-                      Search by VIN
+                      Decode VIN
                     </>
                   )}
                 </Button>
@@ -295,6 +326,14 @@ const VinSearch = () => {
                 <button
                   key={search}
                   className="px-4 py-2 bg-gray-100 hover:bg-automotive-blue-light text-automotive-gray hover:text-automotive-blue rounded-full transition-colors text-sm"
+                  onClick={() => {
+                    const parts = search.split(' ');
+                    if (parts.length >= 3) {
+                      setYear(parts[0]);
+                      setMake(parts[1]);
+                      setModel(parts.slice(2).join(' '));
+                    }
+                  }}
                 >
                   {search}
                 </button>
