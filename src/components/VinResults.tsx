@@ -1,4 +1,5 @@
 
+import { memo, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,19 +20,11 @@ interface VinResultsProps {
   onClose: () => void;
 }
 
-const VinResults = ({ vinNumber, vehicleInfo, compatibleParts, onClose }: VinResultsProps) => {
-  const { addToCart } = useProducts();
-  const { toast } = useToast();
-
-  const handleAddToCart = (product: Product) => {
-    addToCart(product);
-    toast({
-      title: "Added to Cart",
-      description: `${product.name} has been added to your cart`,
-    });
-  };
-
-  const getCategoryColor = (category: string) => {
+const VinProductCard = memo(({ product, onAddToCart }: {
+  product: Product;
+  onAddToCart: (product: Product) => void;
+}) => {
+  const getCategoryColor = useCallback((category: string) => {
     const colors = {
       'engine': 'bg-red-100 text-red-800',
       'suspension': 'bg-blue-100 text-blue-800',
@@ -41,7 +34,79 @@ const VinResults = ({ vinNumber, vehicleInfo, compatibleParts, onClose }: VinRes
       'transmission': 'bg-purple-100 text-purple-800'
     };
     return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-800';
-  };
+  }, []);
+
+  return (
+    <Card className="hover:shadow-automotive transition-all duration-300">
+      <CardContent className="p-4">
+        <div className="aspect-square bg-gray-100 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+          <img 
+            src={product.image_url} 
+            alt={product.name}
+            className="w-full h-full object-cover"
+            loading="lazy"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = `https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=300&h=300&fit=crop&crop=center`;
+            }}
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <div className="flex items-start justify-between gap-2">
+            <h4 className="font-semibold text-automotive-dark line-clamp-2 flex-1">
+              {product.name}
+            </h4>
+            <Badge className={getCategoryColor(product.category)}>
+              {product.category}
+            </Badge>
+          </div>
+          
+          <p className="text-sm text-automotive-gray line-clamp-2">
+            {product.description}
+          </p>
+          
+          <div className="text-xs text-automotive-gray">
+            <p><strong>Part #:</strong> {product.part_number}</p>
+          </div>
+          
+          <div className="flex items-center justify-between pt-2">
+            <span className="text-xl font-bold text-automotive-orange">
+              R{product.price.toFixed(2)}
+            </span>
+            <span className="text-sm text-automotive-gray">
+              {product.stock_quantity} in stock
+            </span>
+          </div>
+          
+          <Button 
+            variant="automotive" 
+            className="w-full mt-3"
+            onClick={() => onAddToCart(product)}
+            disabled={product.stock_quantity === 0}
+          >
+            <ShoppingCart className="w-4 h-4 mr-2" />
+            Add to Cart
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+});
+
+VinProductCard.displayName = 'VinProductCard';
+
+const VinResults = memo(({ vinNumber, vehicleInfo, compatibleParts, onClose }: VinResultsProps) => {
+  const { addToCart } = useProducts();
+  const { toast } = useToast();
+
+  const handleAddToCart = useCallback((product: Product) => {
+    addToCart(product);
+    toast({
+      title: "Added to Cart",
+      description: `${product.name} has been added to your cart`,
+    });
+  }, [addToCart, toast]);
 
   return (
     <div className="space-y-6">
@@ -89,60 +154,18 @@ const VinResults = ({ vinNumber, vehicleInfo, compatibleParts, onClose }: VinRes
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {compatibleParts.map((product) => (
-            <Card key={product.id} className="hover:shadow-automotive transition-all duration-300">
-              <CardContent className="p-4">
-                <div className="aspect-square bg-gray-100 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
-                  <img 
-                    src={product.image_url} 
-                    alt={product.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex items-start justify-between gap-2">
-                    <h4 className="font-semibold text-automotive-dark line-clamp-2 flex-1">
-                      {product.name}
-                    </h4>
-                    <Badge className={getCategoryColor(product.category)}>
-                      {product.category}
-                    </Badge>
-                  </div>
-                  
-                  <p className="text-sm text-automotive-gray line-clamp-2">
-                    {product.description}
-                  </p>
-                  
-                  <div className="text-xs text-automotive-gray">
-                    <p><strong>Part #:</strong> {product.part_number}</p>
-                  </div>
-                  
-                  <div className="flex items-center justify-between pt-2">
-                    <span className="text-xl font-bold text-automotive-orange">
-                      R{product.price.toFixed(2)}
-                    </span>
-                    <span className="text-sm text-automotive-gray">
-                      {product.stock_quantity} in stock
-                    </span>
-                  </div>
-                  
-                  <Button 
-                    variant="automotive" 
-                    className="w-full mt-3"
-                    onClick={() => handleAddToCart(product)}
-                    disabled={product.stock_quantity === 0}
-                  >
-                    <ShoppingCart className="w-4 h-4 mr-2" />
-                    Add to Cart
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <VinProductCard
+              key={product.id}
+              product={product}
+              onAddToCart={handleAddToCart}
+            />
           ))}
         </div>
       </div>
     </div>
   );
-};
+});
+
+VinResults.displayName = 'VinResults';
 
 export default VinResults;

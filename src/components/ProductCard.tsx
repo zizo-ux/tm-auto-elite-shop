@@ -1,4 +1,5 @@
 
+import React, { memo, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,19 +12,19 @@ interface ProductCardProps {
   product: Product;
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = memo(({ product }: ProductCardProps) => {
   const { addToCart } = useProducts();
   const { toast } = useToast();
 
-  const handleAddToCart = () => {
+  const handleAddToCart = useCallback(() => {
     addToCart(product);
     toast({
       title: "Added to Cart",
       description: `${product.name} has been added to your cart`,
     });
-  };
+  }, [addToCart, product, toast]);
 
-  const getCategoryColor = (category: string) => {
+  const getCategoryColor = useCallback((category: string) => {
     const colors = {
       'engine': 'bg-red-100 text-red-800',
       'suspension': 'bg-blue-100 text-blue-800',
@@ -33,11 +34,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
       'transmission': 'bg-purple-100 text-purple-800'
     };
     return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-800';
-  };
+  }, []);
 
-  const formatCategory = (category: string) => {
+  const formatCategory = useCallback((category: string) => {
     return category.charAt(0).toUpperCase() + category.slice(1);
-  };
+  }, []);
 
   return (
     <Card className="group hover:shadow-automotive transition-all duration-300 hover:scale-105">
@@ -47,6 +48,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
             src={product.image_url} 
             alt={product.name}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+            loading="lazy"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = `https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=300&h=300&fit=crop&crop=center`;
+            }}
           />
         </div>
         
@@ -102,6 +108,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
       </CardFooter>
     </Card>
   );
-};
+});
+
+ProductCard.displayName = 'ProductCard';
 
 export default ProductCard;

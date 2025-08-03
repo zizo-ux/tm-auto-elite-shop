@@ -1,9 +1,9 @@
 
-import { useState } from "react";
+import { useState, useCallback, memo } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { ShoppingCart, Plus, Minus, Trash2, X } from "lucide-react";
+import { ShoppingCart, Plus, Minus, Trash2 } from "lucide-react";
 import { useProducts } from "@/contexts/ProductContext";
 import { useToast } from "@/hooks/use-toast";
 
@@ -11,30 +11,88 @@ interface ShoppingCartProps {
   children?: React.ReactNode;
 }
 
+const CartItem = memo(({ item, onQuantityChange, onRemove }: {
+  item: any;
+  onQuantityChange: (id: string, quantity: number) => void;
+  onRemove: (id: string, name: string) => void;
+}) => {
+  return (
+    <Card className="p-4">
+      <div className="flex items-start gap-4">
+        <img 
+          src={item.image_url} 
+          alt={item.name}
+          className="w-16 h-16 object-cover rounded-lg bg-gray-100"
+          loading="lazy"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = `https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=64&h=64&fit=crop&crop=center`;
+          }}
+        />
+        <div className="flex-1">
+          <h3 className="font-semibold text-sm">{item.name}</h3>
+          <p className="text-xs text-gray-500 mb-2">{item.part_number}</p>
+          <p className="font-bold text-automotive-orange">R{item.price.toFixed(2)}</p>
+          
+          <div className="flex items-center gap-2 mt-2">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => onQuantityChange(item.id, item.quantity - 1)}
+            >
+              <Minus className="w-3 h-3" />
+            </Button>
+            <span className="w-8 text-center">{item.quantity}</span>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => onQuantityChange(item.id, item.quantity + 1)}
+            >
+              <Plus className="w-3 h-3" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-red-500 hover:text-red-700 ml-2"
+              onClick={() => onRemove(item.id, item.name)}
+            >
+              <Trash2 className="w-3 h-3" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+});
+
+CartItem.displayName = 'CartItem';
+
 const ShoppingCartComponent = ({ children }: ShoppingCartProps) => {
   const { cartItems, updateCartQuantity, removeFromCart, getCartTotal, getCartItemCount } = useProducts();
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleQuantityChange = (productId: string, newQuantity: number) => {
+  const handleQuantityChange = useCallback((productId: string, newQuantity: number) => {
     updateCartQuantity(productId, newQuantity);
-  };
+  }, [updateCartQuantity]);
 
-  const handleRemoveItem = (productId: string, productName: string) => {
+  const handleRemoveItem = useCallback((productId: string, productName: string) => {
     removeFromCart(productId);
     toast({
       title: "Item Removed",
       description: `${productName} has been removed from your cart`,
     });
-  };
+  }, [removeFromCart, toast]);
 
-  const handleCheckout = () => {
+  const handleCheckout = useCallback(() => {
     toast({
       title: "Checkout",
       description: "Redirecting to checkout page...",
     });
     setIsOpen(false);
-  };
+  }, [toast]);
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -74,48 +132,12 @@ const ShoppingCartComponent = ({ children }: ShoppingCartProps) => {
           ) : (
             <>
               {cartItems.map((item) => (
-                <Card key={item.id} className="p-4">
-                  <div className="flex items-start gap-4">
-                    <img 
-                      src={item.image_url} 
-                      alt={item.name}
-                      className="w-16 h-16 object-cover rounded-lg bg-gray-100"
-                    />
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-sm">{item.name}</h3>
-                      <p className="text-xs text-gray-500 mb-2">{item.part_number}</p>
-                      <p className="font-bold text-automotive-orange">R{item.price.toFixed(2)}</p>
-                      
-                      <div className="flex items-center gap-2 mt-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                        >
-                          <Minus className="w-3 h-3" />
-                        </Button>
-                        <span className="w-8 text-center">{item.quantity}</span>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8"
-                          onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                        >
-                          <Plus className="w-3 h-3" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-red-500 hover:text-red-700 ml-2"
-                          onClick={() => handleRemoveItem(item.id, item.name)}
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
+                <CartItem
+                  key={item.id}
+                  item={item}
+                  onQuantityChange={handleQuantityChange}
+                  onRemove={handleRemoveItem}
+                />
               ))}
               
               <div className="border-t pt-4 mt-4">
