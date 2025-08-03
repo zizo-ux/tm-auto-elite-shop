@@ -1,4 +1,3 @@
-
 import { memo, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,15 +6,11 @@ import { Car, Wrench, ShoppingCart } from "lucide-react";
 import { Product } from "@/types";
 import { useProducts } from "@/contexts/ProductContext";
 import { useToast } from "@/hooks/use-toast";
+import { VehicleInfo } from "@/services/vinService";
 
 interface VinResultsProps {
   vinNumber: string;
-  vehicleInfo: {
-    make: string;
-    model: string;
-    year: string;
-    engine: string;
-  };
+  vehicleInfo: VehicleInfo;
   compatibleParts: Product[];
   onClose: () => void;
 }
@@ -130,7 +125,7 @@ const VinResults = memo(({ vinNumber, vehicleInfo, compatibleParts, onClose }: V
             </div>
             <div>
               <p className="text-sm text-automotive-gray">Engine</p>
-              <p className="font-semibold">{vehicleInfo.engine}</p>
+              <p className="font-semibold">{vehicleInfo.engine || 'Standard Engine'}</p>
             </div>
             <div>
               <p className="text-sm text-automotive-gray">Compatible Parts Found</p>
